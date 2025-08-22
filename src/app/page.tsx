@@ -135,10 +135,8 @@ function Clock() {
           (position) => {
             const { latitude, longitude } = position.coords;
             setCoordinates({ lat: latitude, lon: longitude });
-            console.log("User location:", latitude, longitude);
           },
-          (error) => {
-            console.warn("Geolocation error:", error.message);
+          (_error) => {
             // 获取位置失败，使用深圳的坐标作为默认值
             setCoordinates({ lat: 22.5431, lon: 114.0579 });
           },
@@ -149,7 +147,6 @@ function Clock() {
           },
         );
       } else {
-        console.warn("Geolocation is not supported by this browser");
         // 浏览器不支持地理位置，使用深圳坐标
         setCoordinates({ lat: 22.5431, lon: 114.0579 });
       }
@@ -180,8 +177,7 @@ function Clock() {
             windSpeed: Math.round(weatherData.windSpeed),
           });
         }
-      } catch (error) {
-        console.error("Failed to fetch weather:", error);
+      } catch (_error) {
         // 如果API失败，显示默认天气信息
         setWeather({
           location: t("weather.defaultLocation"),
@@ -211,18 +207,18 @@ function Clock() {
   };
 
   return (
-    <div className="text-right text-white">
-      <div className="text-sm opacity-80 mb-1">
+    <div className="text-right clock-container">
+      <div className="text-sm clock-date mb-1">
         {time ? formatDate(time) : "--"}
       </div>
-      <div className="text-4xl md:text-5xl font-mono font-bold tracking-wider mb-2">
+      <div className="text-4xl md:text-5xl font-mono font-bold tracking-wider mb-2 clock-time">
         {time ? formatTime(time) : "--:--:--"}
       </div>
-      <div className="text-sm opacity-80">
+      <div className="text-sm clock-weather">
         {isLoadingWeather ? (
           // 显示加载状态 - 右对齐
-          <div className="flex items-center justify-end gap-2">
-            <div className="animate-spin rounded-full h-3 w-3 border border-white border-t-transparent"></div>
+          <div className="flex items-center justify-end gap-2 clock-loading">
+            <div className="animate-spin rounded-full h-3 w-3 border clock-spinner border-t-transparent"></div>
             <span>{t("clock.loading")}</span>
           </div>
         ) : weather ? (

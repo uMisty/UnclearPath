@@ -63,7 +63,6 @@ export async function GET(request: Request) {
       language,
     );
     if (cachedLocation) {
-      console.log("Using cached location data:", cachedLocation);
       cityName = cachedLocation.cityName;
       locationDisplayName = cachedLocation.displayName;
     } else {
@@ -88,11 +87,9 @@ export async function GET(request: Request) {
         );
 
         clearTimeout(timeoutId);
-        console.log("Geocoding API response:", geocodeResponse);
 
         if (geocodeResponse.ok) {
           const geocodeData = await geocodeResponse.json();
-          console.log("Geocoding data:", geocodeData);
 
           // 构建本地化地址 - 优先使用城市、县或区
           const city =
@@ -137,15 +134,9 @@ export async function GET(request: Request) {
               language,
               locationData,
             );
-            console.log("Cached location data:", locationData);
           }
         }
-      } catch (geocodeError) {
-        console.warn(
-          "Primary geocoding failed, trying backup service:",
-          geocodeError,
-        );
-
+      } catch (_geocodeError) {
         // 尝试备用的地理编码服务
         try {
           const backupController = new AbortController();
@@ -179,14 +170,10 @@ export async function GET(request: Request) {
             if (city?.trim()) {
               cityName = city;
               locationDisplayName = city;
-              console.log("Using backup geocoding result (not cached):", {
-                cityName,
-                locationDisplayName,
-              });
             }
           }
-        } catch (backupError) {
-          console.warn("Backup geocoding also failed:", backupError);
+        } catch (_backupError) {
+          // 备用地理编码服务也失败了，继续使用坐标
         }
       }
     }
@@ -203,8 +190,6 @@ export async function GET(request: Request) {
 
     // 第二步：使用城市名或坐标查询天气
     const weatherUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(weatherLocation)}?unitGroup=metric&key=${apiKey}&contentType=json&include=current`;
-
-    console.log(weatherUrl);
 
     // 创建AbortController用于超时控制
     const weatherController = new AbortController();
@@ -226,7 +211,6 @@ export async function GET(request: Request) {
 
       // 检查是否是超时错误
       if (fetchError instanceof Error && fetchError.name === "AbortError") {
-        console.error("Weather API timeout");
         return NextResponse.json(
           {
             error: getLocalizedErrorMessage("timeout", language),
@@ -237,7 +221,6 @@ export async function GET(request: Request) {
       }
 
       // 其他网络错误
-      console.error("Weather API fetch error:", fetchError);
       return NextResponse.json(
         {
           error: getLocalizedErrorMessage("fetchFailed", language),
@@ -250,8 +233,6 @@ export async function GET(request: Request) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`Weather API error ${response.status}:`, errorText);
-
       // 根据HTTP状态码返回相应的错误消息
       let errorType = "serverError";
       if (response.status === 404) {
@@ -303,7 +284,6 @@ export async function GET(request: Request) {
 
     return NextResponse.json(formattedWeather);
   } catch (error) {
-    console.error("Weather API error:", error);
     return NextResponse.json(
       {
         error: getLocalizedErrorMessage("fetchFailed", language),

@@ -799,9 +799,32 @@ body {
   animation-delay: 4s;
 }
 
-.random-particle-5 {
-  width: 5px;
-  height: 5px;
-  animation-duration: 13s;
-  animation-delay: 0.5s;
+/* 时钟组件专用样式 */
+.clock-container {
+  /* 移除透明背景，只保留基本样式 */
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.clock-time {
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.clock-date {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.clock-weather {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.clock-loading {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.clock-spinner {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: rgba(255, 255, 255, 0.8);
 }

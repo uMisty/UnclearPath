@@ -12,8 +12,7 @@ export async function GET() {
         cleanupInterval: "30 minutes",
       },
     });
-  } catch (error) {
-    console.error("Cache stats error:", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to get cache statistics" },
       { status: 500 },
@@ -27,8 +26,7 @@ export async function DELETE() {
     return NextResponse.json({
       message: "Weather cache cleared successfully",
     });
-  } catch (error) {
-    console.error("Cache clear error:", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to clear cache" },
       { status: 500 },
@@ -44,8 +42,7 @@ export async function POST() {
       message: "Cache cleanup completed",
       stats,
     });
-  } catch (error) {
-    console.error("Cache cleanup error:", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to cleanup cache" },
       { status: 500 },

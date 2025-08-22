@@ -167,10 +167,9 @@ class WeatherCache {
       }
     }
 
+    // 清理完成，返回清理的条目数量
     if (cleanedCount > 0 || locationCleanedCount > 0) {
-      console.log(
-        `Cleaned up ${cleanedCount} weather cache entries and ${locationCleanedCount} location cache entries`,
-      );
+      // 静默清理，不输出日志
     }
   }
 
