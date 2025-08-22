@@ -2,9 +2,9 @@
 export const zh = {
   // 站点配置
   site: {
-    title: "个人主页",
+    title: "Homepage",
     name: "uMisty",
-    description: "一个优雅的个人主页，展示你的数字名片",
+    description: "一个熟练各种技术名称拼写的全栈工程师",
   },
   // 时钟和天气
   clock: {
@@ -82,8 +82,8 @@ export const zh = {
   },
   // 座右铭
   motto: {
-    title: "✨ 人生座右铭 ✨",
-    text: "保持好奇心，永远在路上",
+    title: "✨ 信念感 ✨",
+    text: "不是因为看到了才相信，而是因为相信才看到",
     subtitle: "Stay curious, always on the road",
   },
   // 快捷链接
