@@ -1,14 +1,40 @@
 import { NextResponse } from "next/server";
+import { translations } from "@/i18n/translations";
+import { type WeatherData, weatherCache } from "@/utils/weatherCache";
+import {
+  formatLocationName,
+  getDefaultLocationName,
+  getGeocodingLanguage,
+  getLocalizedCondition,
+  getLocalizedWindDirection,
+} from "@/utils/weatherTranslations";
+
+// 获取本地化错误消息的辅助函数
+function getLocalizedErrorMessage(errorType: string, language: string): string {
+  const lang = language === "zh-TW" ? "zh-TW" : language === "en" ? "en" : "zh";
+  const errorMessages = translations[lang]?.weather?.errors;
+
+  switch (errorType) {
+    case "timeout":
+      return errorMessages?.timeout || "网络超时，请稍后重试";
+    case "notFound":
+      return errorMessages?.notFound || "未找到该地区的天气信息";
+    case "serverError":
+      return errorMessages?.serverError || "天气服务暂时不可用";
+    default:
+      return errorMessages?.fetchFailed || "天气获取失败";
+  }
+}
 
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+
+  // 优先使用经纬度，如果没有则使用默认的深圳坐标
+  const lat = searchParams.get("lat");
+  const lon = searchParams.get("lon");
+  const language = searchParams.get("lang") || "zh"; // 新增语言参数
+
   try {
-    const { searchParams } = new URL(request.url);
-
-    // 优先使用经纬度，如果没有则使用默认的深圳坐标
-    const lat = searchParams.get("lat");
-    const lon = searchParams.get("lon");
-    const language = searchParams.get("lang") || "zh"; // 新增语言参数
-
     // 深圳的经纬度作为默认值
     const defaultLat = "22.5431";
     const defaultLon = "114.0579";
@@ -26,93 +52,234 @@ export async function GET(request: Request) {
       );
     }
 
-    // 使用经纬度构建API URL
-    const location = `${latitude},${longitude}`;
-    const weatherUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=${apiKey}&contentType=json&include=current`;
+    // 第一步：检查位置缓存，如果没有则使用逆地理编码获取城市名称
+    let cityName = "";
+    let locationDisplayName = getDefaultLocationName(language);
 
-    console.log(
-      "Fetching weather from coordinates:",
-      `${latitude},${longitude}`,
+    // 首先检查位置缓存
+    const cachedLocation = weatherCache.getLocation(
+      latitude,
+      longitude,
+      language,
     );
+    if (cachedLocation) {
+      console.log("Using cached location data:", cachedLocation);
+      cityName = cachedLocation.cityName;
+      locationDisplayName = cachedLocation.displayName;
+    } else {
+      // 缓存中没有，进行地理编码API调用
+      try {
+        // 根据语言设置逆地理编码API的语言参数
+        const geoLanguage = getGeocodingLanguage(language);
 
-    const response = await fetch(weatherUrl, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "Mozilla/5.0 (compatible; Weather-App/1.0)",
-      },
-    });
+        // 添加超时控制
+        const geocodeController = new AbortController();
+        const timeoutId = setTimeout(() => geocodeController.abort(), 5000); // 5秒超时
+
+        const geocodeResponse = await fetch(
+          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=${geoLanguage}`,
+          {
+            headers: {
+              Accept: "application/json",
+              "User-Agent": "Mozilla/5.0 (compatible; Weather-App/1.0)",
+            },
+            signal: geocodeController.signal,
+          },
+        );
+
+        clearTimeout(timeoutId);
+        console.log("Geocoding API response:", geocodeResponse);
+
+        if (geocodeResponse.ok) {
+          const geocodeData = await geocodeResponse.json();
+          console.log("Geocoding data:", geocodeData);
+
+          // 构建本地化地址 - 优先使用城市、县或区
+          const city =
+            geocodeData.city ||
+            geocodeData.locality ||
+            geocodeData.principalSubdivision;
+          const countryName = geocodeData.countryName;
+
+          if (city?.trim()) {
+            // 构建更完整的城市名用于天气API查询
+            // 格式：城市, 省份, 国家（英文）或 城市, 国家（英文）
+            if (geocodeData.principalSubdivision && geocodeData.countryName) {
+              // 如果有省份信息，使用完整格式：深圳, 广东, China
+              cityName = `${city}, ${geocodeData.principalSubdivision}, China`;
+            } else if (geocodeData.countryName) {
+              // 只有国家信息：深圳, China
+              cityName = `${city}, China`;
+            } else {
+              // 只有城市名，可能不够精确，但先尝试
+              cityName = city;
+            }
+
+            // 用于显示的本地化城市名
+            locationDisplayName = formatLocationName(
+              city,
+              countryName,
+              language,
+            );
+
+            // 将位置信息保存到缓存
+            const locationData = {
+              cityName: cityName,
+              displayName: locationDisplayName,
+              coordinates: {
+                lat: parseFloat(latitude),
+                lon: parseFloat(longitude),
+              },
+            };
+            weatherCache.setLocation(
+              latitude,
+              longitude,
+              language,
+              locationData,
+            );
+            console.log("Cached location data:", locationData);
+          }
+        }
+      } catch (geocodeError) {
+        console.warn(
+          "Primary geocoding failed, trying backup service:",
+          geocodeError,
+        );
+
+        // 尝试备用的地理编码服务
+        try {
+          const backupController = new AbortController();
+          const backupTimeoutId = setTimeout(
+            () => backupController.abort(),
+            3000,
+          ); // 3秒超时
+
+          const backupResponse = await fetch(
+            `https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}`,
+            {
+              headers: {
+                Accept: "application/json",
+                "User-Agent": "Mozilla/5.0 (compatible; Weather-App/1.0)",
+              },
+              signal: backupController.signal,
+            },
+          );
+
+          clearTimeout(backupTimeoutId);
+
+          if (backupResponse.ok) {
+            const backupData = await backupResponse.json();
+
+            const city =
+              backupData.address?.city ||
+              backupData.address?.town ||
+              backupData.address?.village ||
+              backupData.display_name?.split(",")[0]?.trim();
+
+            if (city?.trim()) {
+              cityName = city;
+              locationDisplayName = city;
+              console.log("Using backup geocoding result (not cached):", {
+                cityName,
+                locationDisplayName,
+              });
+            }
+          }
+        } catch (backupError) {
+          console.warn("Backup geocoding also failed:", backupError);
+        }
+      }
+    }
+
+    // 如果没有获取到城市名，回退到坐标查询
+    const weatherLocation = cityName || `${latitude},${longitude}`;
+    const cacheKey = cityName || `${latitude},${longitude}`;
+
+    // 检查基于城市名的缓存
+    const cachedData = weatherCache.get(cacheKey, language);
+    if (cachedData) {
+      return NextResponse.json(cachedData);
+    }
+
+    // 第二步：使用城市名或坐标查询天气
+    const weatherUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(weatherLocation)}?unitGroup=metric&key=${apiKey}&contentType=json&include=current`;
+
+    console.log(weatherUrl);
+
+    // 创建AbortController用于超时控制
+    const weatherController = new AbortController();
+    const timeoutId = setTimeout(() => weatherController.abort(), 10000); // 10秒超时
+
+    let response: Response;
+    try {
+      response = await fetch(weatherUrl, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "Mozilla/5.0 (compatible; Weather-App/1.0)",
+        },
+        signal: weatherController.signal,
+      });
+      clearTimeout(timeoutId);
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+
+      // 检查是否是超时错误
+      if (fetchError instanceof Error && fetchError.name === "AbortError") {
+        console.error("Weather API timeout");
+        return NextResponse.json(
+          {
+            error: getLocalizedErrorMessage("timeout", language),
+            details: "Request timeout after 10 seconds",
+          },
+          { status: 408 },
+        );
+      }
+
+      // 其他网络错误
+      console.error("Weather API fetch error:", fetchError);
+      return NextResponse.json(
+        {
+          error: getLocalizedErrorMessage("fetchFailed", language),
+          details:
+            fetchError instanceof Error ? fetchError.message : "Network error",
+        },
+        { status: 500 },
+      );
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`Weather API error ${response.status}:`, errorText);
-      throw new Error(`Weather API returned ${response.status}: ${errorText}`);
+
+      // 根据HTTP状态码返回相应的错误消息
+      let errorType = "serverError";
+      if (response.status === 404) {
+        errorType = "notFound";
+      } else if (response.status >= 500) {
+        errorType = "serverError";
+      } else {
+        errorType = "fetchFailed";
+      }
+
+      return NextResponse.json(
+        {
+          error: getLocalizedErrorMessage(errorType, language),
+          details: `Weather API returned ${response.status}: ${errorText}`,
+        },
+        { status: response.status },
+      );
     }
 
     const weatherData = await response.json();
 
-    // 获取地理位置名称 (逆地理编码)
-    let locationName =
-      weatherData.resolvedAddress || getDefaultLocationName(language);
-
-    try {
-      // 根据语言设置逆地理编码API的语言参数
-      const geoLanguage = getGeocodingLanguage(language);
-      const geocodeResponse = await fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=${geoLanguage}`,
-        {
-          headers: {
-            Accept: "application/json",
-            "User-Agent": "Mozilla/5.0 (compatible; Weather-App/1.0)",
-          },
-        },
-      );
-
-      if (geocodeResponse.ok) {
-        const geocodeData = await geocodeResponse.json();
-
-        // 构建本地化地址 - 优先使用城市、县或区
-        const city =
-          geocodeData.city ||
-          geocodeData.locality ||
-          geocodeData.principalSubdivision;
-        const countryName = geocodeData.countryName;
-
-        if (city) {
-          // 根据语言和国家判断地址格式
-          locationName = formatLocationName(city, countryName, language);
-        } else if (geocodeData.countryName) {
-          locationName = formatCountryName(geocodeData.countryName, language);
-        }
-
-        console.log("Geocode result:", {
-          language,
-          city: geocodeData.city,
-          locality: geocodeData.locality,
-          principalSubdivision: geocodeData.principalSubdivision,
-          countryName: geocodeData.countryName,
-          finalName: locationName,
-        });
-      }
-    } catch (geocodeError) {
-      console.warn(
-        "Geocoding failed, using weather API address:",
-        geocodeError,
-      );
-      // 如果逆地理编码失败，尝试从天气API的地址中提取城市名
-      if (weatherData.resolvedAddress) {
-        const addressParts = weatherData.resolvedAddress.split(",");
-        locationName = addressParts[0]?.trim() || weatherData.resolvedAddress;
-      }
-    }
-
-    // 提取当前天气信息
+    // 第三步：处理天气数据
     const currentConditions = weatherData.currentConditions;
     const todayData = weatherData.days[0];
 
     // 格式化天气数据
-    const formattedWeather = {
-      location: locationName, // 使用逆地理编码获取的位置名称
+    const formattedWeather: WeatherData = {
+      location: locationDisplayName, // 使用本地化的位置名称
       originalAddress: weatherData.resolvedAddress, // 保留原始地址作为备用
       temperature: Math.round(currentConditions.temp),
       condition: getLocalizedCondition(currentConditions.conditions, language),
@@ -131,175 +298,18 @@ export async function GET(request: Request) {
       coordinates: { lat: parseFloat(latitude), lon: parseFloat(longitude) },
     };
 
+    // 将数据保存到缓存（使用城市名作为缓存键）
+    weatherCache.set(cacheKey, language, formattedWeather);
+
     return NextResponse.json(formattedWeather);
   } catch (error) {
     console.error("Weather API error:", error);
     return NextResponse.json(
       {
-        error: "Failed to fetch weather data",
+        error: getLocalizedErrorMessage("fetchFailed", language),
         details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 },
     );
   }
-}
-
-// 获取逆地理编码API支持的语言代码
-function getGeocodingLanguage(language: string): string {
-  const languageMap: { [key: string]: string } = {
-    zh: "zh",
-    "zh-TW": "zh",
-    en: "en",
-  };
-  return languageMap[language] || "en";
-}
-
-// 获取默认位置名称
-function getDefaultLocationName(language: string): string {
-  const defaultNames: { [key: string]: string } = {
-    zh: "未知位置",
-    "zh-TW": "未知位置",
-    en: "Unknown Location",
-  };
-  return defaultNames[language] || defaultNames.en;
-}
-
-// 格式化位置名称
-function formatLocationName(
-  city: string,
-  countryName: string,
-  language: string,
-): string {
-  if (language === "zh" || language === "zh-TW") {
-    // 中文：如果是中国，只显示城市名，不显示国家名
-    return countryName === "China" ||
-      countryName === "中国" ||
-      countryName === "中华人民共和国"
-      ? city
-      : `${city}, ${countryName}`;
-  } else {
-    // 英文：显示城市和国家
-    return `${city}, ${countryName}`;
-  }
-}
-
-// 格式化国家名称
-function formatCountryName(countryName: string, language: string): string {
-  if (language === "zh" || language === "zh-TW") {
-    return countryName === "中华人民共和国" ? "中国" : countryName;
-  } else {
-    return countryName;
-  }
-}
-
-// 将英文天气条件转换为本地化文本
-function getLocalizedCondition(condition: string, language: string): string {
-  const conditionMaps: { [key: string]: { [key: string]: string } } = {
-    zh: {
-      clear: "晴",
-      sunny: "晴",
-      "partly-cloudy": "多云",
-      cloudy: "阴",
-      overcast: "阴",
-      rain: "雨",
-      snow: "雪",
-      fog: "雾",
-      wind: "风",
-      "partly-cloudy-day": "多云",
-      "partly-cloudy-night": "多云",
-      "clear-day": "晴",
-      "clear-night": "晴",
-    },
-    "zh-TW": {
-      clear: "晴",
-      sunny: "晴",
-      "partly-cloudy": "多雲",
-      cloudy: "陰",
-      overcast: "陰",
-      rain: "雨",
-      snow: "雪",
-      fog: "霧",
-      wind: "風",
-      "partly-cloudy-day": "多雲",
-      "partly-cloudy-night": "多雲",
-      "clear-day": "晴",
-      "clear-night": "晴",
-    },
-    en: {
-      clear: "Clear",
-      sunny: "Sunny",
-      "partly-cloudy": "Partly Cloudy",
-      cloudy: "Cloudy",
-      overcast: "Overcast",
-      rain: "Rain",
-      snow: "Snow",
-      fog: "Fog",
-      wind: "Windy",
-      "partly-cloudy-day": "Partly Cloudy",
-      "partly-cloudy-night": "Partly Cloudy",
-      "clear-day": "Clear",
-      "clear-night": "Clear",
-    },
-  };
-
-  const conditionMap = conditionMaps[language] || conditionMaps.en;
-  const lowerCondition = condition.toLowerCase();
-
-  for (const key in conditionMap) {
-    if (lowerCondition.includes(key)) {
-      return conditionMap[key];
-    }
-  }
-
-  return condition; // 如果没有匹配，返回原文
-}
-
-// 将风向角度转换为本地化方向
-function getLocalizedWindDirection(degrees: number, language: string): string {
-  const directionMaps: { [key: string]: string[] } = {
-    zh: [
-      "北风",
-      "东北风",
-      "东风",
-      "东南风",
-      "南风",
-      "西南风",
-      "西风",
-      "西北风",
-    ],
-    "zh-TW": [
-      "北風",
-      "東北風",
-      "東風",
-      "東南風",
-      "南風",
-      "西南風",
-      "西風",
-      "西北風",
-    ],
-    en: [
-      "North Wind",
-      "Northeast Wind",
-      "East Wind",
-      "Southeast Wind",
-      "South Wind",
-      "Southwest Wind",
-      "West Wind",
-      "Northwest Wind",
-    ],
-  };
-
-  const directions = directionMaps[language] || directionMaps.en;
-  const index = Math.round(degrees / 45) % 8;
-  return directions[index];
-}
-
-// 将英文天气条件转换为中文 (保持向后兼容)
-function _getChineseCondition(condition: string): string {
-  return getLocalizedCondition(condition, "zh");
-}
-
-// 将风向角度转换为中文方向 (保持向后兼容)
-function _getChineseWindDirection(degrees: number): string {
-  return getLocalizedWindDirection(degrees, "zh");
 }
