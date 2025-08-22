@@ -1,75 +1,84 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { FaGithub, FaSteam, FaTwitter, FaTelegram, FaDiscord } from 'react-icons/fa';
-import { MdEmail } from 'react-icons/md';
-import { LanguageProvider, useLanguage } from '../i18n/LanguageContext';
-import { LanguageSwitch } from '../i18n/LanguageSwitch';
+import { useEffect, useState } from "react";
+import {
+  FaDiscord,
+  FaGithub,
+  FaSteam,
+  FaTelegram,
+  FaTwitter,
+} from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { LanguageProvider, useLanguage } from "../i18n/LanguageContext";
+import { LanguageSwitch } from "../i18n/LanguageSwitch";
 
 // 随机渐变背景生成器
 function useRandomGradient() {
-  const [gradientStyle, setGradientStyle] = useState('from-blue-400 via-purple-400 to-indigo-500');
+  const [gradientStyle, setGradientStyle] = useState(
+    "from-blue-400 via-purple-400 to-indigo-500",
+  );
   const [decorativeColors, setDecorativeColors] = useState({
-    color1: 'bg-cyan-300/20',
-    color2: 'bg-blue-300/20', 
-    color3: 'bg-purple-300/20'
+    color1: "bg-cyan-300/20",
+    color2: "bg-blue-300/20",
+    color3: "bg-purple-300/20",
   });
 
   useEffect(() => {
     // 只在客户端水合后设置随机样式
-    
+
     // 和谐色彩组合预设 - 基于色彩理论
     const harmonicColorSets = [
       // 暖色调组合
       {
-        gradient: 'from-orange-400 via-red-400 to-pink-500',
-        decorative: ['bg-yellow-300/20', 'bg-red-300/20', 'bg-pink-300/20']
+        gradient: "from-orange-400 via-red-400 to-pink-500",
+        decorative: ["bg-yellow-300/20", "bg-red-300/20", "bg-pink-300/20"],
       },
       // 冷色调组合
       {
-        gradient: 'from-blue-400 via-purple-400 to-indigo-500',
-        decorative: ['bg-cyan-300/20', 'bg-blue-300/20', 'bg-purple-300/20']
+        gradient: "from-blue-400 via-purple-400 to-indigo-500",
+        decorative: ["bg-cyan-300/20", "bg-blue-300/20", "bg-purple-300/20"],
       },
       // 自然色调组合
       {
-        gradient: 'from-green-400 via-teal-400 to-blue-500',
-        decorative: ['bg-emerald-300/20', 'bg-teal-300/20', 'bg-blue-300/20']
+        gradient: "from-green-400 via-teal-400 to-blue-500",
+        decorative: ["bg-emerald-300/20", "bg-teal-300/20", "bg-blue-300/20"],
       },
       // 日落色调组合
       {
-        gradient: 'from-yellow-400 via-orange-400 to-red-500',
-        decorative: ['bg-yellow-300/20', 'bg-orange-300/20', 'bg-red-300/20']
+        gradient: "from-yellow-400 via-orange-400 to-red-500",
+        decorative: ["bg-yellow-300/20", "bg-orange-300/20", "bg-red-300/20"],
       },
       // 薰衣草色调组合
       {
-        gradient: 'from-purple-400 via-pink-400 to-indigo-500',
-        decorative: ['bg-purple-300/20', 'bg-pink-300/20', 'bg-indigo-300/20']
+        gradient: "from-purple-400 via-pink-400 to-indigo-500",
+        decorative: ["bg-purple-300/20", "bg-pink-300/20", "bg-indigo-300/20"],
       },
       // 海洋色调组合
       {
-        gradient: 'from-cyan-400 via-blue-400 to-indigo-600',
-        decorative: ['bg-cyan-300/20', 'bg-blue-300/20', 'bg-indigo-300/20']
+        gradient: "from-cyan-400 via-blue-400 to-indigo-600",
+        decorative: ["bg-cyan-300/20", "bg-blue-300/20", "bg-indigo-300/20"],
       },
       // 森林色调组合
       {
-        gradient: 'from-emerald-400 via-green-400 to-teal-500',
-        decorative: ['bg-emerald-300/20', 'bg-green-300/20', 'bg-teal-300/20']
+        gradient: "from-emerald-400 via-green-400 to-teal-500",
+        decorative: ["bg-emerald-300/20", "bg-green-300/20", "bg-teal-300/20"],
       },
       // 梦幻色调组合
       {
-        gradient: 'from-pink-400 via-purple-400 to-blue-500',
-        decorative: ['bg-pink-300/20', 'bg-purple-300/20', 'bg-blue-300/20']
-      }
+        gradient: "from-pink-400 via-purple-400 to-blue-500",
+        decorative: ["bg-pink-300/20", "bg-purple-300/20", "bg-blue-300/20"],
+      },
     ];
 
     // 随机选择一个和谐色彩组合
-    const randomSet = harmonicColorSets[Math.floor(Math.random() * harmonicColorSets.length)];
-    
+    const randomSet =
+      harmonicColorSets[Math.floor(Math.random() * harmonicColorSets.length)];
+
     setGradientStyle(randomSet.gradient);
     setDecorativeColors({
       color1: randomSet.decorative[0],
       color2: randomSet.decorative[1],
-      color3: randomSet.decorative[2]
+      color3: randomSet.decorative[2],
     });
   }, []);
 
@@ -87,14 +96,17 @@ function Clock() {
     windDirection: string;
     windSpeed: number;
   } | null>(null);
-  const [coordinates, setCoordinates] = useState<{lat: number, lon: number} | null>(null);
+  const [coordinates, setCoordinates] = useState<{
+    lat: number;
+    lon: number;
+  } | null>(null);
   const [isLoadingWeather, setIsLoadingWeather] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(language);
 
   useEffect(() => {
     // 首次设置时间
     setTime(new Date());
-    
+
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
@@ -115,28 +127,28 @@ function Clock() {
   useEffect(() => {
     // 获取用户地理位置 - 只在客户端执行
     const getLocation = () => {
-      if (typeof window === 'undefined') return;
-      
+      if (typeof window === "undefined") return;
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
             setCoordinates({ lat: latitude, lon: longitude });
-            console.log('User location:', latitude, longitude);
+            console.log("User location:", latitude, longitude);
           },
           (error) => {
-            console.warn('Geolocation error:', error.message);
+            console.warn("Geolocation error:", error.message);
             // 获取位置失败，使用深圳的坐标作为默认值
             setCoordinates({ lat: 22.5431, lon: 114.0579 });
           },
           {
             timeout: 10000,
             maximumAge: 600000, // 10分钟内的缓存位置有效
-            enableHighAccuracy: false // 不要求高精度，提高获取速度
-          }
+            enableHighAccuracy: false, // 不要求高精度，提高获取速度
+          },
         );
       } else {
-        console.warn('Geolocation is not supported by this browser');
+        console.warn("Geolocation is not supported by this browser");
         // 浏览器不支持地理位置，使用深圳坐标
         setCoordinates({ lat: 22.5431, lon: 114.0579 });
       }
@@ -154,7 +166,9 @@ function Clock() {
       setIsLoadingWeather(true);
 
       try {
-        const response = await fetch(`/api/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&lang=${language}`);
+        const response = await fetch(
+          `/api/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&lang=${language}`,
+        );
         if (response.ok) {
           const weatherData = await response.json();
           setWeather({
@@ -166,13 +180,13 @@ function Clock() {
           });
         }
       } catch (error) {
-        console.error('Failed to fetch weather:', error);
+        console.error("Failed to fetch weather:", error);
         // 如果API失败，显示默认天气信息
         setWeather({
-          location: t('weather.defaultLocation'),
+          location: t("weather.defaultLocation"),
           temperature: 25,
-          condition: t('weather.defaultCondition'),
-          windDirection: t('weather.defaultWind'),
+          condition: t("weather.defaultCondition"),
+          windDirection: t("weather.defaultWind"),
           windSpeed: 3,
         });
       } finally {
@@ -187,33 +201,37 @@ function Clock() {
   }, [coordinates, language, t]); // 添加language作为依赖，语言变化时重新获取天气
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('zh-CN', {
+    return date.toLocaleTimeString("zh-CN", {
       hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     });
   };
 
   return (
     <div className="text-right text-white">
-      <div className="text-sm opacity-80 mb-1">{time ? formatDate(time) : '--'}</div>
+      <div className="text-sm opacity-80 mb-1">
+        {time ? formatDate(time) : "--"}
+      </div>
       <div className="text-4xl md:text-5xl font-mono font-bold tracking-wider mb-2">
-        {time ? formatTime(time) : '--:--:--'}
+        {time ? formatTime(time) : "--:--:--"}
       </div>
       <div className="text-sm opacity-80">
         {isLoadingWeather ? (
           // 显示加载状态 - 右对齐
           <div className="flex items-center justify-end gap-2">
             <div className="animate-spin rounded-full h-3 w-3 border border-white border-t-transparent"></div>
-            <span>{t('clock.loading')}</span>
+            <span>{t("clock.loading")}</span>
           </div>
         ) : weather ? (
           // 显示天气信息
           formatWeather(weather)
+        ) : // 显示定位状态
+        coordinates ? (
+          t("clock.loading")
         ) : (
-          // 显示定位状态
-          coordinates ? t('clock.loading') : t('clock.locating')
+          t("clock.locating")
         )}
       </div>
     </div>
@@ -223,18 +241,16 @@ function Clock() {
 // 座右铭组件
 function Motto() {
   const { t } = useLanguage();
-  
+
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20 shadow-lg hover-glow">
       <div className="text-white/90 text-lg font-medium mb-2">
-        {t('motto.title')}
+        {t("motto.title")}
       </div>
       <div className="text-white/80 text-base leading-relaxed whitespace-pre-line">
-        {t('motto.text')}
+        {t("motto.text")}
       </div>
-      <div className="text-white/60 text-sm mt-2">
-        {t('motto.subtitle')}
-      </div>
+      <div className="text-white/60 text-sm mt-2">{t("motto.subtitle")}</div>
     </div>
   );
 }
@@ -242,22 +258,27 @@ function Motto() {
 // 快捷链接组件
 function QuickLinks() {
   const { t } = useLanguage();
-  
+
   const links = [
-    { id: 'websites', name: t('quickLinks.websites'), icon: '🔗', href: '#' },
-    { id: 'blog', name: t('quickLinks.blog'), icon: '📝', href: '#' },
-    { id: 'cloud', name: t('quickLinks.cloud'), icon: '☁️', href: '#' },
-    { id: 'music', name: t('quickLinks.music'), icon: '🎵', href: '#' },
-    { id: 'start', name: t('quickLinks.start'), icon: '🚀', href: '#' },
-    { id: 'collection', name: t('quickLinks.collection'), icon: '📚', href: '#' },
-    { id: 'trending', name: t('quickLinks.trending'), icon: '🔥', href: '#' }
+    { id: "websites", name: t("quickLinks.websites"), icon: "🔗", href: "#" },
+    { id: "blog", name: t("quickLinks.blog"), icon: "📝", href: "#" },
+    { id: "cloud", name: t("quickLinks.cloud"), icon: "☁️", href: "#" },
+    { id: "music", name: t("quickLinks.music"), icon: "🎵", href: "#" },
+    { id: "start", name: t("quickLinks.start"), icon: "🚀", href: "#" },
+    {
+      id: "collection",
+      name: t("quickLinks.collection"),
+      icon: "📚",
+      href: "#",
+    },
+    { id: "trending", name: t("quickLinks.trending"), icon: "🔥", href: "#" },
   ];
 
   return (
     <div className="space-y-4">
       <div className="text-center">
         <h3 className="text-white text-lg font-semibold mb-4">
-          {t('quickLinks.title')}
+          {t("quickLinks.title")}
         </h3>
       </div>
       <div className="flex flex-wrap gap-3 w-full justify-start">
@@ -281,14 +302,14 @@ function QuickLinks() {
 // 社交媒体链接组件
 function SocialLinks() {
   const { t } = useLanguage();
-  
+
   const socials = [
-    { id: 'github', name: t('social.github'), icon: FaGithub, href: '#' },
-    { id: 'steam', name: t('social.steam'), icon: FaSteam, href: '#' },
-    { id: 'email', name: t('social.email'), icon: MdEmail, href: '#' },
-    { id: 'twitter', name: t('social.twitter'), icon: FaTwitter, href: '#' },
-    { id: 'telegram', name: t('social.telegram'), icon: FaTelegram, href: '#' },
-    { id: 'discord', name: t('social.discord'), icon: FaDiscord, href: '#' }
+    { id: "github", name: t("social.github"), icon: FaGithub, href: "#" },
+    { id: "steam", name: t("social.steam"), icon: FaSteam, href: "#" },
+    { id: "email", name: t("social.email"), icon: MdEmail, href: "#" },
+    { id: "twitter", name: t("social.twitter"), icon: FaTwitter, href: "#" },
+    { id: "telegram", name: t("social.telegram"), icon: FaTelegram, href: "#" },
+    { id: "discord", name: t("social.discord"), icon: FaDiscord, href: "#" },
   ];
 
   return (
@@ -305,7 +326,7 @@ function SocialLinks() {
             title={social.name}
           >
             <IconComponent className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-            
+
             {/* 悬浮提示 */}
             <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
               {social.name}
@@ -320,7 +341,7 @@ function SocialLinks() {
 // 个人介绍组件
 function Introduction() {
   const { t } = useLanguage();
-  
+
   return (
     <div className="bg-black/30 backdrop-blur-sm rounded-xl p-6 text-white border border-white/10">
       {/* 头像和基本信息 */}
@@ -334,23 +355,25 @@ function Introduction() {
           </div>
         </div>
         <div>
-          <h2 className="text-xl font-bold mb-1">{t('introduction.greeting')}</h2>
-          <p className="text-sm opacity-80">{t('introduction.role')}</p>
+          <h2 className="text-xl font-bold mb-1">
+            {t("introduction.greeting")}
+          </h2>
+          <p className="text-sm opacity-80">{t("introduction.role")}</p>
         </div>
       </div>
 
       {/* 个人简介 */}
       <div className="space-y-4 mb-4">
         <p className="text-sm opacity-90 leading-relaxed whitespace-pre-line">
-          {t('introduction.bio')}
+          {t("introduction.bio")}
         </p>
 
         <div className="flex items-center gap-2 pt-2">
           <span className="text-purple-400">🔗</span>
           <span className="text-sm">
-            {t('introduction.linkText')} 
+            {t("introduction.linkText")}
             <span className="text-blue-300 hover:text-blue-200 underline underline-offset-2 mx-1 cursor-pointer">
-              {t('introduction.github')}
+              {t("introduction.github")}
             </span>
           </span>
         </div>
@@ -358,9 +381,15 @@ function Introduction() {
 
       {/* 底部标签 */}
       <div className="flex flex-wrap gap-2 pt-3 border-t border-white/10">
-        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">{t('introduction.tags.fullstack')}</span>
-        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">{t('introduction.tags.exploration')}</span>
-        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">{t('introduction.tags.opensource')}</span>
+        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">
+          {t("introduction.tags.fullstack")}
+        </span>
+        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">
+          {t("introduction.tags.exploration")}
+        </span>
+        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">
+          {t("introduction.tags.opensource")}
+        </span>
       </div>
     </div>
   );
@@ -382,11 +411,17 @@ function HomePage() {
       <div className={`absolute inset-0 bg-gradient-to-br ${gradientStyle}`}>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
       </div>
-      
+
       <div className="absolute inset-0 opacity-30">
-        <div className={`absolute top-20 left-10 w-32 h-32 ${decorativeColors.color1} rounded-full blur-xl animate-pulse`}></div>
-        <div className={`absolute top-40 right-20 w-48 h-48 ${decorativeColors.color2} rounded-full blur-2xl animate-pulse animate-delay-1`}></div>
-        <div className={`absolute bottom-20 left-1/3 w-40 h-40 ${decorativeColors.color3} rounded-full blur-xl animate-pulse animate-delay-2`}></div>
+        <div
+          className={`absolute top-20 left-10 w-32 h-32 ${decorativeColors.color1} rounded-full blur-xl animate-pulse`}
+        ></div>
+        <div
+          className={`absolute top-40 right-20 w-48 h-48 ${decorativeColors.color2} rounded-full blur-2xl animate-pulse animate-delay-1`}
+        ></div>
+        <div
+          className={`absolute bottom-20 left-1/3 w-40 h-40 ${decorativeColors.color3} rounded-full blur-xl animate-pulse animate-delay-2`}
+        ></div>
       </div>
 
       <div className="relative z-10 min-h-screen flex flex-col p-6 md:p-8">
@@ -432,19 +467,19 @@ function HomePage() {
             <SocialLinks />
           </div>
           <div className="text-center text-white/60 text-xs md:text-sm">
-            Copyright © 2025 uMisty. Powered by{' '}
-            <a 
-              href="https://github.com/uMisty/UnclearPath" 
-              target="_blank" 
+            Copyright © 2025 uMisty. Powered by{" "}
+            <a
+              href="https://github.com/uMisty/UnclearPath"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-white/80 hover:text-white transition-colors underline decoration-white/40 hover:decoration-white"
             >
               UnclearPath
             </a>
-            . Made by{' '}
-            <a 
-              href="https://umisty.com" 
-              target="_blank" 
+            . Made by{" "}
+            <a
+              href="https://umisty.com"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-white/80 hover:text-white transition-colors underline decoration-white/40 hover:decoration-white"
             >

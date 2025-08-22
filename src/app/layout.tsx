@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
   // 在实际应用中可以根据用户语言偏好动态选择
   const defaultTitle = "个人主页 - uMisty";
   const defaultDescription = "一个优雅的个人主页，展示你的数字名片";
-  
+
   return {
     title: defaultTitle,
     description: defaultDescription,
