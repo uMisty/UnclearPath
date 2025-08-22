@@ -153,6 +153,7 @@ UnclearPath/
 ├── Dockerfile                 # Docker构建文件
 ├── docker-compose.yml         # Docker编排文件
 ├── .dockerignore              # Docker忽略文件
+├── DOCKER.md                  # Docker部署详细指南
 ├── package.json
 └── README.md
 ```
@@ -183,6 +184,17 @@ pm2 start npm --name "unclearpath" -- start
 ```
 
 #### Docker 部署
+
+**快速启动（推荐）:**
+```bash
+# 使用docker-compose
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
+```
+
+**手动构建:**
 ```bash
 # 构建Docker镜像
 docker build -t unclearpath .
@@ -193,9 +205,6 @@ docker run -d \
   -p 3000:3000 \
   -e VISUAL_CROSSING_API_KEY=your_api_key_here \
   unclearpath
-
-# 或使用docker-compose
-docker-compose up -d
 ```
 
 #### Docker 部署说明

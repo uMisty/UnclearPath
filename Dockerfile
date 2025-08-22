@@ -1,60 +1,43 @@
-# 使用官方Node.js镜像作为基础镜像
-FROM node:18-alpine AS base
+FROM node:latest AS builder
 
-# 安装依赖所需的基础包
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# 安装pnpm
+#复制package.json文件 和 pnpm-lock.yaml文件
+COPY package.json pnpm-lock.yaml ./
+
 RUN npm install -g pnpm
 
-# 依赖安装阶段
-FROM base AS deps
-# 复制package.json和pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN npm config set registry https://registry.npmmirror.com/
 
-# 构建阶段
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+#安装依赖
+RUN --mount=type=cache,target=/root/.pnpm-store pnpm install
+
+#复制项目文件
 COPY . .
 
-# 设置环境变量禁用Next.js遥测
-ENV NEXT_TELEMETRY_DISABLED 1
+#构建项目
+RUN pnpm run build
 
-# 构建应用
-RUN pnpm build
+FROM node:latest AS runner
 
-# 生产运行阶段
-FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm install -g pnpm
 
-# 创建非root用户
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN npm config set registry https://registry.npmmirror.com/
 
-# 复制构建产物
+ENV NODE_ENV=production
+ENV VISUAL_CROSSING_API_KEY=your_api_key_here
+
+# 从builder复制package.json和lock文件
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
+# 复制 .next 文件夹
+COPY --from=builder /app/.next ./.next
+# 复制 public 文件夹
 COPY --from=builder /app/public ./public
-
-# 设置正确的权限并复制.next文件夹
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# 自动利用输出跟踪来减少镜像大小
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
+# 只安装生产依赖
+RUN --mount=type=cache,target=/root/.pnpm-store pnpm install --prod
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-
-# 启动应用
-CMD ["node", "server.js"]
+CMD ["pnpm", "start"]
