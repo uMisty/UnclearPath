@@ -8,14 +8,18 @@ import { LanguageSwitch } from '../i18n/LanguageSwitch';
 
 // 随机渐变背景生成器
 function useRandomGradient() {
-  const [gradientStyle, setGradientStyle] = useState('');
+  const [gradientStyle, setGradientStyle] = useState('from-blue-400 via-purple-400 to-indigo-500');
   const [decorativeColors, setDecorativeColors] = useState({
-    color1: 'bg-white/10',
+    color1: 'bg-cyan-300/20',
     color2: 'bg-blue-300/20', 
-    color3: 'bg-pink-300/20'
+    color3: 'bg-purple-300/20'
   });
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    // 只在客户端水合后设置随机样式
+    setIsHydrated(true);
+    
     // 和谐色彩组合预设 - 基于色彩理论
     const harmonicColorSets = [
       // 暖色调组合
@@ -77,7 +81,7 @@ function useRandomGradient() {
 // 时钟组件
 function Clock() {
   const { t, language, formatWeather, formatDate } = useLanguage();
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState<Date | null>(null);
   const [weather, setWeather] = useState<{
     location: string;
     temperature: number;
@@ -90,6 +94,9 @@ function Clock() {
   const [currentLanguage, setCurrentLanguage] = useState(language);
 
   useEffect(() => {
+    // 首次设置时间
+    setTime(new Date());
+    
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
@@ -108,8 +115,10 @@ function Clock() {
   }, [language, currentLanguage]);
 
   useEffect(() => {
-    // 获取用户地理位置
+    // 获取用户地理位置 - 只在客户端执行
     const getLocation = () => {
+      if (typeof window === 'undefined') return;
+      
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -190,9 +199,9 @@ function Clock() {
 
   return (
     <div className="text-right text-white">
-      <div className="text-sm opacity-80 mb-1">{formatDate(time)}</div>
+      <div className="text-sm opacity-80 mb-1">{time ? formatDate(time) : '--'}</div>
       <div className="text-4xl md:text-5xl font-mono font-bold tracking-wider mb-2">
-        {formatTime(time)}
+        {time ? formatTime(time) : '--:--:--'}
       </div>
       <div className="text-sm opacity-80">
         {isLoadingWeather ? (
