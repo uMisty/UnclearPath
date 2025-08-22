@@ -28,6 +28,118 @@ body {
   overflow-x: hidden;
 }
 
+/* 改进的背景对比度和文字可读性 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+}
+
+.glass-card-dark {
+  background: rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.text-contrast {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.text-contrast-soft {
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.text-readable {
+  color: #ffffff;
+  text-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.8),
+    0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 改进的按钮对比度 */
+.btn-glass {
+  background: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 暗色背景覆盖层 - 提高文字对比度 */
+.bg-overlay-dark {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+.bg-overlay-gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+/* 响应式文字对比度 */
+@media (prefers-color-scheme: dark) {
+  .text-adaptive {
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-card-adaptive {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .text-adaptive {
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  }
+
+  .glass-card-adaptive {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .glass-card,
+  .glass-card-adaptive {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .text-contrast,
+  .text-adaptive {
+    color: #ffffff;
+    text-shadow:
+      0 1px 1px rgba(0, 0, 0, 1),
+      0 0 8px rgba(0, 0, 0, 0.8);
+  }
+}
+
 /* 自定义滚动条 */
 ::-webkit-scrollbar {
   width: 6px;

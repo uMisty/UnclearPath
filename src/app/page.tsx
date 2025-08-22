@@ -243,11 +243,11 @@ function Motto() {
   const { t } = useLanguage();
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20 shadow-lg hover-glow">
-      <div className="text-white/90 text-lg font-medium mb-2">
+    <div className="glass-card-adaptive rounded-2xl p-6 text-center shadow-lg hover-glow bg-overlay-dark">
+      <div className="text-readable text-lg font-medium mb-2">
         {t("motto.title")}
       </div>
-      <div className="text-white/80 text-base leading-relaxed whitespace-pre-line">
+      <div className="text-contrast-soft text-base leading-relaxed whitespace-pre-line">
         {t("motto.text")}
       </div>
       <div className="text-white/60 text-sm mt-2">{t("motto.subtitle")}</div>
@@ -286,10 +286,10 @@ function QuickLinks() {
           <a
             key={link.id}
             href={link.href}
-            className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-white hover:bg-white/25 transition-all duration-300 flex items-center gap-2 group border border-white/10 hover:border-white/20 hover:shadow-lg hover:shadow-white/10 flex-1 min-w-fit justify-center hover:scale-105"
+            className="btn-glass rounded-xl p-3 flex items-center gap-2 group flex-1 min-w-fit justify-center hover:scale-105"
           >
             <span className="text-lg">{link.icon}</span>
-            <span className="font-medium text-sm whitespace-nowrap">
+            <span className="font-medium text-sm whitespace-nowrap text-readable">
               {link.name}
             </span>
           </a>
@@ -367,16 +367,6 @@ function Introduction() {
         <p className="text-sm opacity-90 leading-relaxed whitespace-pre-line">
           {t("introduction.bio")}
         </p>
-
-        <div className="flex items-center gap-2 pt-2">
-          <span className="text-purple-400">🔗</span>
-          <span className="text-sm">
-            {t("introduction.linkText")}
-            <span className="text-blue-300 hover:text-blue-200 underline underline-offset-2 mx-1 cursor-pointer">
-              {t("introduction.github")}
-            </span>
-          </span>
-        </div>
       </div>
 
       {/* 底部标签 */}
@@ -437,7 +427,7 @@ function HomePage() {
         </div>
 
         <div className="flex-1 flex items-center justify-center py-8">
-          <div className="grid lg:grid-cols-2 gap-6 items-start max-w-5xl w-full mx-auto">
+          <div className="grid lg:grid-cols-2 gap-6 items-center max-w-5xl w-full mx-auto">
             {/* 左侧：个人介绍 */}
             <div className="flex justify-center">
               <div className="space-y-6 animate-fadeInUp-delay">
