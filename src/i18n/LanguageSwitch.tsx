@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from './LanguageContext';
-import { Language } from './translations';
+import type { Language } from './translations';
 
 const languages = [
   { code: 'zh' as Language, name: '简体中文', flag: '🇨🇳' },
@@ -63,6 +63,7 @@ export function LanguageSwitch() {
     <div className="relative">
       <button
         ref={buttonRef}
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="group flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-3 py-2 text-white hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40 hover:shadow-lg hover:shadow-white/10 min-w-[100px] justify-center"
         title={t('language.switch')}
@@ -74,7 +75,9 @@ export function LanguageSwitch() {
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
+          <title>Dropdown Arrow</title>
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
@@ -82,9 +85,16 @@ export function LanguageSwitch() {
       {isOpen && (
         <>
           {/* 背景遮罩 */}
-          <div 
-            className="fixed inset-0 z-10" 
+          <button
+            type="button"
+            className="fixed inset-0 z-10 cursor-default"
             onClick={() => setIsOpen(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setIsOpen(false);
+              }
+            }}
+            aria-label="Close language menu"
           />
           
           {/* 下拉菜单 */}
@@ -99,6 +109,7 @@ export function LanguageSwitch() {
             {languages.map((lang) => (
               <button
                 key={lang.code}
+                type="button"
                 onClick={() => {
                   setLanguage(lang.code);
                   setIsOpen(false);

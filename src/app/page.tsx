@@ -14,11 +14,9 @@ function useRandomGradient() {
     color2: 'bg-blue-300/20', 
     color3: 'bg-purple-300/20'
   });
-  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     // 只在客户端水合后设置随机样式
-    setIsHydrated(true);
     
     // 和谐色彩组合预设 - 基于色彩理论
     const harmonicColorSets = [
@@ -186,7 +184,7 @@ function Clock() {
     if (coordinates) {
       fetchWeather();
     }
-  }, [coordinates, language]); // 添加language作为依赖，语言变化时重新获取天气
+  }, [coordinates, language, t]); // 添加language作为依赖，语言变化时重新获取天气
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('zh-CN', {
