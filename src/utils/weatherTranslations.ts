@@ -77,17 +77,6 @@ export function formatLocationName(
 }
 
 /**
- * 格式化国家名称
- */
-export function formatCountryName(
-  countryName: string,
-  language: string,
-): string {
-  if (!countryName?.trim()) return getDefaultLocationName(language);
-  return countryName;
-}
-
-/**
  * 获取支持的语言代码
  */
 function getSupportedLanguage(language: string): SupportedLanguage {

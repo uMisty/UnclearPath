@@ -18,72 +18,38 @@ function useRandomGradient() {
   const [gradientStyle, setGradientStyle] = useState(
     "from-blue-400 via-purple-400 to-indigo-500",
   );
-  const [decorativeColors, setDecorativeColors] = useState({
-    color1: "bg-cyan-300/20",
-    color2: "bg-blue-300/20",
-    color3: "bg-purple-300/20",
-  });
 
   useEffect(() => {
     // 只在客户端水合后设置随机样式
 
     // 和谐色彩组合预设 - 基于色彩理论
-    const harmonicColorSets = [
+    const harmonicGradients = [
       // 暖色调组合
-      {
-        gradient: "from-orange-400 via-red-400 to-pink-500",
-        decorative: ["bg-yellow-300/20", "bg-red-300/20", "bg-pink-300/20"],
-      },
+      "from-orange-400 via-red-400 to-pink-500",
       // 冷色调组合
-      {
-        gradient: "from-blue-400 via-purple-400 to-indigo-500",
-        decorative: ["bg-cyan-300/20", "bg-blue-300/20", "bg-purple-300/20"],
-      },
+      "from-blue-400 via-purple-400 to-indigo-500",
       // 自然色调组合
-      {
-        gradient: "from-green-400 via-teal-400 to-blue-500",
-        decorative: ["bg-emerald-300/20", "bg-teal-300/20", "bg-blue-300/20"],
-      },
+      "from-green-400 via-teal-400 to-blue-500",
       // 日落色调组合
-      {
-        gradient: "from-yellow-400 via-orange-400 to-red-500",
-        decorative: ["bg-yellow-300/20", "bg-orange-300/20", "bg-red-300/20"],
-      },
+      "from-yellow-400 via-orange-400 to-red-500",
       // 薰衣草色调组合
-      {
-        gradient: "from-purple-400 via-pink-400 to-indigo-500",
-        decorative: ["bg-purple-300/20", "bg-pink-300/20", "bg-indigo-300/20"],
-      },
+      "from-purple-400 via-pink-400 to-indigo-500",
       // 海洋色调组合
-      {
-        gradient: "from-cyan-400 via-blue-400 to-indigo-600",
-        decorative: ["bg-cyan-300/20", "bg-blue-300/20", "bg-indigo-300/20"],
-      },
+      "from-cyan-400 via-blue-400 to-indigo-600",
       // 森林色调组合
-      {
-        gradient: "from-emerald-400 via-green-400 to-teal-500",
-        decorative: ["bg-emerald-300/20", "bg-green-300/20", "bg-teal-300/20"],
-      },
+      "from-emerald-400 via-green-400 to-teal-500",
       // 梦幻色调组合
-      {
-        gradient: "from-pink-400 via-purple-400 to-blue-500",
-        decorative: ["bg-pink-300/20", "bg-purple-300/20", "bg-blue-300/20"],
-      },
+      "from-pink-400 via-purple-400 to-blue-500",
     ];
 
     // 随机选择一个和谐色彩组合
-    const randomSet =
-      harmonicColorSets[Math.floor(Math.random() * harmonicColorSets.length)];
+    const randomGradient =
+      harmonicGradients[Math.floor(Math.random() * harmonicGradients.length)];
 
-    setGradientStyle(randomSet.gradient);
-    setDecorativeColors({
-      color1: randomSet.decorative[0],
-      color2: randomSet.decorative[1],
-      color3: randomSet.decorative[2],
-    });
+    setGradientStyle(randomGradient);
   }, []);
 
-  return { gradientStyle, decorativeColors };
+  return { gradientStyle };
 }
 
 // 时钟组件
@@ -384,7 +350,7 @@ function Introduction() {
 
 // 主页内容组件
 function HomePage() {
-  const { gradientStyle, decorativeColors } = useRandomGradient();
+  const { gradientStyle } = useRandomGradient();
   const { getPageTitle } = useLanguage();
 
   // 动态更新页面标题
@@ -401,18 +367,6 @@ function HomePage() {
 
       {/* 动态背景效果 */}
       <AnimatedBackground gradientStyle={gradientStyle} />
-
-      <div className="absolute inset-0 opacity-30">
-        <div
-          className={`absolute top-20 left-10 w-32 h-32 ${decorativeColors.color1} rounded-full blur-xl animate-pulse`}
-        ></div>
-        <div
-          className={`absolute top-40 right-20 w-48 h-48 ${decorativeColors.color2} rounded-full blur-2xl animate-pulse animate-delay-1`}
-        ></div>
-        <div
-          className={`absolute bottom-20 left-1/3 w-40 h-40 ${decorativeColors.color3} rounded-full blur-xl animate-pulse animate-delay-2`}
-        ></div>
-      </div>
 
       <div className="relative z-10 min-h-screen flex flex-col p-6 md:p-8">
         <div className="flex justify-between items-start mb-8">

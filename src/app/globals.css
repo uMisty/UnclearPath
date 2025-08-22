@@ -671,15 +671,6 @@ body {
   backdrop-filter: blur(12px);
 }
 
-/* 动画延迟 */
-.animate-delay-1 {
-  animation-delay: 1s;
-}
-
-.animate-delay-2 {
-  animation-delay: 2s;
-}
-
 /* 微妙的hover效果 */
 .hover-lift {
   transition:
