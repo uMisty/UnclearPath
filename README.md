@@ -150,6 +150,9 @@ UnclearPath/
 │   ├── logo.png               # 项目Logo
 │   ├── demo.png               # 项目截图
 │   └── favicon.ico            # 网站图标
+├── Dockerfile                 # Docker构建文件
+├── docker-compose.yml         # Docker编排文件
+├── .dockerignore              # Docker忽略文件
 ├── package.json
 └── README.md
 ```
@@ -169,17 +172,38 @@ UnclearPath/
 4. 配置环境变量并部署
 
 ### 自托管部署
+
+#### 传统方式
 ```bash
 # 构建项目
 pnpm build
 
 # 使用 PM2 运行
 pm2 start npm --name "unclearpath" -- start
-
-# 或使用 Docker
-docker build -t unclearpath .
-docker run -p 3000:3000 unclearpath
 ```
+
+#### Docker 部署
+```bash
+# 构建Docker镜像
+docker build -t unclearpath .
+
+# 运行容器
+docker run -d \
+  --name unclearpath \
+  -p 3000:3000 \
+  -e VISUAL_CROSSING_API_KEY=your_api_key_here \
+  unclearpath
+
+# 或使用docker-compose
+docker-compose up -d
+```
+
+#### Docker 部署说明
+- **镜像优化**: 使用多阶段构建和Next.js standalone输出，最小化镜像大小
+- **安全性**: 使用非root用户运行应用
+- **环境变量**: 通过 `-e` 参数或docker-compose配置API Key
+- **健康检查**: 自动监控容器健康状态
+- **持久化**: 容器重启后自动恢复运行
 
 ## ❓ 常见问题
 
