@@ -9,6 +9,7 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { AnimatedBackground } from "../components/AnimatedBackground";
 import { LanguageProvider, useLanguage } from "../i18n/LanguageContext";
 import { LanguageSwitch } from "../i18n/LanguageSwitch";
 
@@ -401,6 +402,9 @@ function HomePage() {
       <div className={`absolute inset-0 bg-gradient-to-br ${gradientStyle}`}>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
       </div>
+
+      {/* 动态背景效果 */}
+      <AnimatedBackground gradientStyle={gradientStyle} />
 
       <div className="absolute inset-0 opacity-30">
         <div
