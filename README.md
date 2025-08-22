@@ -1,5 +1,7 @@
 # UnclearPath ✨
 
+![UnclearPath Logo](./public/logo.png)
+
 > 一个优雅的个人主页，展示你的数字名片
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.0-black?style=flat&logo=next.js)](https://nextjs.org/)
@@ -35,6 +37,12 @@
 ### 📱 社交与导航
 - **社交链接** - GitHub、邮箱等平台链接
 - **快捷导航** - 个人项目和常用工具入口
+
+## 📸 项目截图
+
+![UnclearPath 项目演示](./public/demo.png)
+
+*项目主界面展示 - 动态背景、实时时钟、天气信息、多语言切换*
 
 ## 🚀 快速开始
 
@@ -126,6 +134,8 @@ UnclearPath/
 │   │   ├── globals.css         # 全局样式
 │   │   ├── layout.tsx          # 根布局
 │   │   └── page.tsx            # 主页面
+│   ├── components/             # 组件目录
+│   │   └── AnimatedBackground.tsx  # 动态背景组件
 │   ├── i18n/                   # 国际化
 │   │   ├── locales/            # 分语言文件
 │   │   │   ├── zh.ts           # 简体中文
@@ -137,6 +147,9 @@ UnclearPath/
 │   └── utils/                  # 工具函数
 │       └── weatherCache.ts     # 天气缓存
 ├── public/                     # 静态资源
+│   ├── logo.png               # 项目Logo
+│   ├── demo.png               # 项目截图
+│   └── favicon.ico            # 网站图标
 ├── package.json
 └── README.md
 ```
@@ -179,6 +192,9 @@ A: 修改 `src/i18n/locales/` 目录下的语言文件和 `src/app/page.tsx` 中
 **Q: 支持哪些地区的天气？**
 A: Visual Crossing API支持全球天气数据，包括中国大陆、港澳台等地区。
 
+**Q: 如何更换背景动画效果？**
+A: 在 `src/components/AnimatedBackground.tsx` 中调整动画参数，或在 `src/app/globals.css` 中修改CSS动画。
+
 ## 🤝 贡献指南
 
 欢迎提交 Issues 和 Pull Requests！
@@ -198,6 +214,8 @@ A: Visual Crossing API支持全球天气数据，包括中国大陆、港澳台�
 - [imsyy/home](https://github.com/imsyy/home) - 设计灵感来源
 - [Next.js](https://nextjs.org/) - React全栈框架
 - [Visual Crossing Weather](https://www.visualcrossing.com/) - 天气数据API
+- [Tailwind CSS](https://tailwindcss.com/) - 实用CSS框架
+- [React Icons](https://react-icons.github.io/react-icons/) - 图标库
 
 ---
 
