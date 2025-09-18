@@ -89,33 +89,125 @@ export const zhTW = {
   // 快捷連結
   quickLinks: {
     title: "🌟 了解更多關於我 🌟",
-    websites: "網站列表",
-    blog: "部落格",
-    cloud: "雲端存儲",
-    music: "音樂",
-    start: "起始頁",
-    collection: "收藏夾",
-    trending: "今日熱門",
+    links: [
+      {
+        name: "網站列表",
+        icon: "🌐",
+        url: "/websites",
+        description: "我的網站收藏",
+      },
+      {
+        name: "部落格",
+        icon: "📝",
+        url: "/blog",
+        description: "技術分享與思考",
+      },
+      {
+        name: "雲端存儲",
+        icon: "☁️",
+        url: "/cloud",
+        description: "檔案存儲服務",
+      },
+      {
+        name: "音樂",
+        icon: "🎵",
+        url: "/music",
+        description: "我的音樂播放清單",
+      },
+      {
+        name: "起始頁",
+        icon: "🏠",
+        url: "/start",
+        description: "瀏覽器起始頁",
+      },
+      {
+        name: "收藏夾",
+        icon: "⭐",
+        url: "/collection",
+        description: "精選內容收藏",
+      },
+      {
+        name: "今日熱門",
+        icon: "🔥",
+        url: "/trending",
+        description: "熱門內容推薦",
+      },
+    ],
   },
   // 社交媒體
   social: {
-    github: "GitHub",
-    steam: "Steam",
-    email: "電子郵件",
-    twitter: "Twitter",
-    telegram: "Telegram",
-    discord: "Discord",
+    title: "🤝 聯繫我",
+    links: [
+      {
+        name: "GitHub",
+        icon: "FaGithub",
+        url: "https://github.com/umisty",
+        description: "程式碼倉庫與專案",
+      },
+      {
+        name: "Steam",
+        icon: "FaSteam",
+        url: "https://steamcommunity.com/id/umisty",
+        description: "遊戲檔案",
+      },
+      {
+        name: "電子郵件",
+        icon: "MdEmail",
+        url: "mailto:your.email@example.com",
+        description: "聯繫郵箱",
+      },
+      {
+        name: "Twitter",
+        icon: "FaTwitter",
+        url: "https://twitter.com/umisty",
+        description: "推特動態",
+      },
+      {
+        name: "LinkedIn",
+        icon: "FaLinkedin",
+        url: "https://linkedin.com/in/umisty",
+        description: "職業網路",
+      },
+      {
+        name: "YouTube",
+        icon: "FaYoutube",
+        url: "https://youtube.com/@umisty",
+        description: "影片頻道",
+      },
+    ],
   },
   // 個人介紹
   introduction: {
     greeting: "👋 你好，我是 CodeExplorer",
     role: "全端開發者",
     bio: "我是一名熱愛程式設計的全端開發者，擁有多年的Web開發經驗。專注於創建優雅、高效的程式碼解決方案，從前端使用者介面到後端系統架構，我都能熟練掌握。\n\n喜歡探索新技術，保持學習的熱忱。相信程式碼不僅僅是解決問題的工具，更是一種藝術表達。在工作中追求完美的使用者體驗，在程式碼中追求簡潔與優雅。",
-    tags: {
-      fullstack: "#全端開發",
-      exploration: "#技術探索",
-      opensource: "#開源貢獻",
-    },
+    tags: [
+      {
+        name: "全端開發",
+        icon: "💻",
+        color: "#3B82F6",
+      },
+      {
+        name: "技術探索",
+        icon: "🔍",
+        color: "#10B981",
+      },
+      {
+        name: "開源貢獻",
+        icon: "🌟",
+        color: "#F59E0B",
+      },
+      {
+        name: "程式藝術",
+        icon: "🎨",
+        color: "#8B5CF6",
+      },
+      {
+        name: "學習熱忱",
+        icon: "📚",
+        color: "#EF4444",
+      },
+    ],
   },
   // 語言切換
   language: {

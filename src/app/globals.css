@@ -28,21 +28,42 @@ body {
   overflow-x: hidden;
 }
 
-/* 改进的背景对比度和文字可读性 */
-.glass-card {
-  background: rgba(255, 255, 255, 0.12);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+
+
+/* 标签样式 */
+.tag-item {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.glass-card-dark {
-  background: rgba(0, 0, 0, 0.25);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+.tag-item:hover {
+  transform: scale(1.05);
+}
+
+.tag-item[data-color="#3B82F6"] {
+  background-color: rgba(59, 130, 246, 0.2);
+  border-color: #3B82F6;
+}
+
+.tag-item[data-color="#10B981"] {
+  background-color: rgba(16, 185, 129, 0.2);
+  border-color: #10B981;
+}
+
+.tag-item[data-color="#F59E0B"] {
+  background-color: rgba(245, 158, 11, 0.2);
+  border-color: #F59E0B;
+}
+
+.tag-item[data-color="#8B5CF6"] {
+  background-color: rgba(139, 92, 246, 0.2);
+  border-color: #8B5CF6;
+}
+
+.tag-item[data-color="#EF4444"] {
+  background-color: rgba(239, 68, 68, 0.2);
+  border-color: #EF4444;
 }
 
 /* 动态背景装饰线条 - 曲线版本 */

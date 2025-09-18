@@ -89,33 +89,125 @@ export const zh = {
   // 快捷链接
   quickLinks: {
     title: "🌟 了解更多关于我 🌟",
-    websites: "我的网站",
-    blog: "博客",
-    cloud: "云存储",
-    music: "音乐",
-    start: "起始页",
-    collection: "收藏夹",
-    trending: "今日热门",
+    links: [
+      {
+        name: "网站列表",
+        icon: "🌐",
+        url: "/websites",
+        description: "我的网站收藏",
+      },
+      {
+        name: "博客",
+        icon: "📝",
+        url: "/blog",
+        description: "技术分享与思考",
+      },
+      {
+        name: "云存储",
+        icon: "☁️",
+        url: "/cloud",
+        description: "文件存储服务",
+      },
+      {
+        name: "音乐",
+        icon: "🎵",
+        url: "/music",
+        description: "我的音乐播放列表",
+      },
+      {
+        name: "起始页",
+        icon: "🏠",
+        url: "/start",
+        description: "浏览器起始页",
+      },
+      {
+        name: "收藏夹",
+        icon: "⭐",
+        url: "/collection",
+        description: "精选内容收藏",
+      },
+      {
+        name: "今日热门",
+        icon: "🔥",
+        url: "/trending",
+        description: "热门内容推荐",
+      },
+    ],
   },
   // 社交媒体
   social: {
-    github: "GitHub",
-    steam: "Steam",
-    email: "邮箱",
-    twitter: "Twitter",
-    telegram: "Telegram",
-    discord: "Discord",
+    title: "🤝 联系我",
+    links: [
+      {
+        name: "GitHub",
+        icon: "FaGithub",
+        url: "https://github.com/umisty",
+        description: "代码仓库与项目",
+      },
+      {
+        name: "Steam",
+        icon: "FaSteam",
+        url: "https://steamcommunity.com/id/umisty",
+        description: "游戏档案",
+      },
+      {
+        name: "邮箱",
+        icon: "MdEmail",
+        url: "mailto:your.email@example.com",
+        description: "联系邮箱",
+      },
+      {
+        name: "Twitter",
+        icon: "FaTwitter",
+        url: "https://twitter.com/umisty",
+        description: "推特动态",
+      },
+      {
+        name: "LinkedIn",
+        icon: "FaLinkedin",
+        url: "https://linkedin.com/in/umisty",
+        description: "职业网络",
+      },
+      {
+        name: "YouTube",
+        icon: "FaYoutube",
+        url: "https://youtube.com/@umisty",
+        description: "视频频道",
+      },
+    ],
   },
   // 个人介绍
   introduction: {
     greeting: "uMisty",
     role: "👀正在假装是一个全栈工程师",
     bio: "你好 👋，我是 Misty，一名正在全栈之路上升级打怪的开发者 🛠️。目前以 .NET 为核心技术栈，熟悉 Vue，正在学习 React 和 Flutter，一步步拓展自己的技能版图。对我来说，编程不仅是一份工作，更是一场持续探索的冒险，每一次敲下的代码，都是向未知世界迈出的一步。\n\n我热爱探索新技术 🔍，保持对编程的热枕 ❤️‍🔥，喜欢在解决问题的过程中找到成就感，也享受调试时那种“啊哈！”的瞬间 ✨。无论是后端的逻辑构建，还是前端的交互体验，我都希望能用代码创造出既实用又有温度的作品 🌍。\n\n未来，我希望自己能成为一名独立的全栈工程师 🚀，不仅能独立完成从后端到前端的开发，还能在跨平台领域游刃有余。对我来说，学习的过程永远不会停止，就像版本迭代一样，不断优化、不断进化。",
-    tags: {
-      fullstack: "#全栈开发",
-      exploration: "#技术探索",
-      opensource: "#开源贡献",
-    },
+    tags: [
+      {
+        name: "全栈开发",
+        icon: "💻",
+        color: "#3B82F6",
+      },
+      {
+        name: "技术探索",
+        icon: "🔍",
+        color: "#10B981",
+      },
+      {
+        name: "开源贡献",
+        icon: "🌟",
+        color: "#F59E0B",
+      },
+      {
+        name: "代码艺术",
+        icon: "🎨",
+        color: "#8B5CF6",
+      },
+      {
+        name: "学习热情",
+        icon: "📚",
+        color: "#EF4444",
+      },
+    ],
   },
   // 语言切换
   language: {
