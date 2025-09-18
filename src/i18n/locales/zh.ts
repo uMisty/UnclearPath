@@ -89,33 +89,125 @@ export const zh = {
   // 快捷链接
   quickLinks: {
     title: "🌟 了解更多关于我 🌟",
-    websites: "网站列表",
-    blog: "博客",
-    cloud: "云存储",
-    music: "音乐",
-    start: "起始页",
-    collection: "收藏夹",
-    trending: "今日热门",
+    links: [
+      {
+        name: "网站列表",
+        icon: "🌐",
+        url: "/websites",
+        description: "我的网站收藏",
+      },
+      {
+        name: "博客",
+        icon: "📝",
+        url: "/blog",
+        description: "技术分享与思考",
+      },
+      {
+        name: "云存储",
+        icon: "☁️",
+        url: "/cloud",
+        description: "文件存储服务",
+      },
+      {
+        name: "音乐",
+        icon: "🎵",
+        url: "/music",
+        description: "我的音乐播放列表",
+      },
+      {
+        name: "起始页",
+        icon: "🏠",
+        url: "/start",
+        description: "浏览器起始页",
+      },
+      {
+        name: "收藏夹",
+        icon: "⭐",
+        url: "/collection",
+        description: "精选内容收藏",
+      },
+      {
+        name: "今日热门",
+        icon: "🔥",
+        url: "/trending",
+        description: "热门内容推荐",
+      },
+    ],
   },
   // 社交媒体
   social: {
-    github: "GitHub",
-    steam: "Steam",
-    email: "邮箱",
-    twitter: "Twitter",
-    telegram: "Telegram",
-    discord: "Discord",
+    title: "🤝 联系我",
+    links: [
+      {
+        name: "GitHub",
+        icon: "FaGithub",
+        url: "https://github.com/umisty",
+        description: "代码仓库与项目",
+      },
+      {
+        name: "Steam",
+        icon: "FaSteam",
+        url: "https://steamcommunity.com/id/umisty",
+        description: "游戏档案",
+      },
+      {
+        name: "邮箱",
+        icon: "MdEmail",
+        url: "mailto:your.email@example.com",
+        description: "联系邮箱",
+      },
+      {
+        name: "Twitter",
+        icon: "FaTwitter",
+        url: "https://twitter.com/umisty",
+        description: "推特动态",
+      },
+      {
+        name: "LinkedIn",
+        icon: "FaLinkedin",
+        url: "https://linkedin.com/in/umisty",
+        description: "职业网络",
+      },
+      {
+        name: "YouTube",
+        icon: "FaYoutube",
+        url: "https://youtube.com/@umisty",
+        description: "视频频道",
+      },
+    ],
   },
   // 个人介绍
   introduction: {
     greeting: "👋 你好，我是 CodeExplorer",
     role: "全栈开发者",
     bio: "我是一名热爱编程的全栈开发者，拥有多年的Web开发经验。专注于创建优雅、高效的代码解决方案，从前端用户界面到后端系统架构，我都能熟练掌握。\n\n喜欢探索新技术，保持学习的热情。相信代码不仅仅是解决问题的工具，更是一种艺术表达。在工作中追求完美的用户体验，在代码中追求简洁与优雅。",
-    tags: {
-      fullstack: "#全栈开发",
-      exploration: "#技术探索",
-      opensource: "#开源贡献",
-    },
+    tags: [
+      {
+        name: "全栈开发",
+        icon: "💻",
+        color: "#3B82F6",
+      },
+      {
+        name: "技术探索",
+        icon: "🔍",
+        color: "#10B981",
+      },
+      {
+        name: "开源贡献",
+        icon: "🌟",
+        color: "#F59E0B",
+      },
+      {
+        name: "代码艺术",
+        icon: "🎨",
+        color: "#8B5CF6",
+      },
+      {
+        name: "学习热情",
+        icon: "📚",
+        color: "#EF4444",
+      },
+    ],
   },
   // 语言切换
   language: {

@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  FaDiscord,
-  FaGithub,
-  FaSteam,
-  FaTelegram,
-  FaTwitter,
-} from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
 import { AnimatedBackground } from "../components/AnimatedBackground";
 import { LanguageProvider, useLanguage } from "../i18n/LanguageContext";
 import { LanguageSwitch } from "../i18n/LanguageSwitch";
+import { translations } from "../i18n/translations";
+import type { LinkItem, TagItem } from "../i18n/types";
+import { getDynamicIcon } from "../utils/iconResolver";
 
 // 随机渐变背景生成器
 function useRandomGradient() {
@@ -220,36 +215,23 @@ function Motto() {
 
 // 快捷链接组件
 function QuickLinks() {
-  const { t } = useLanguage();
-
-  const links = [
-    { id: "websites", name: t("quickLinks.websites"), icon: "🔗", href: "#" },
-    { id: "blog", name: t("quickLinks.blog"), icon: "📝", href: "#" },
-    { id: "cloud", name: t("quickLinks.cloud"), icon: "☁️", href: "#" },
-    { id: "music", name: t("quickLinks.music"), icon: "🎵", href: "#" },
-    { id: "start", name: t("quickLinks.start"), icon: "🚀", href: "#" },
-    {
-      id: "collection",
-      name: t("quickLinks.collection"),
-      icon: "📚",
-      href: "#",
-    },
-    { id: "trending", name: t("quickLinks.trending"), icon: "🔥", href: "#" },
-  ];
+  const { language } = useLanguage();
+  const quickLinksData = translations[language].quickLinks;
 
   return (
     <div className="space-y-4">
       <div className="text-center">
         <h3 className="text-white text-lg font-semibold mb-4">
-          {t("quickLinks.title")}
+          {quickLinksData.title}
         </h3>
       </div>
       <div className="flex flex-wrap gap-3 w-full justify-start">
-        {links.map((link) => (
+        {quickLinksData.links.map((link: LinkItem, index: number) => (
           <a
-            key={link.id}
-            href={link.href}
+            key={`quicklink-${index}-${link.name}`}
+            href={link.url}
             className="btn-glass rounded-xl p-3 flex items-center gap-2 group flex-1 min-w-fit justify-center hover:scale-105"
+            title={link.description}
           >
             <span className="text-lg">{link.icon}</span>
             <span className="font-medium text-sm whitespace-nowrap text-readable">
@@ -264,29 +246,23 @@ function QuickLinks() {
 
 // 社交媒体链接组件
 function SocialLinks() {
-  const { t } = useLanguage();
-
-  const socials = [
-    { id: "github", name: t("social.github"), icon: FaGithub, href: "#" },
-    { id: "steam", name: t("social.steam"), icon: FaSteam, href: "#" },
-    { id: "email", name: t("social.email"), icon: MdEmail, href: "#" },
-    { id: "twitter", name: t("social.twitter"), icon: FaTwitter, href: "#" },
-    { id: "telegram", name: t("social.telegram"), icon: FaTelegram, href: "#" },
-    { id: "discord", name: t("social.discord"), icon: FaDiscord, href: "#" },
-  ];
+  const { language } = useLanguage();
+  const socialData = translations[language].social;
 
   return (
     <div className="flex items-center justify-center gap-3">
-      {socials.map((social) => {
-        const IconComponent = social.icon;
+      {socialData.links.map((social: LinkItem, index: number) => {
+        // 使用动态图标解析器，自动支持所有ReactIcon图标
+        const IconComponent = getDynamicIcon(social.icon, 'FaGlobe');
+        
         return (
           <a
-            key={social.id}
-            href={social.href}
+            key={`social-${index}-${social.name}`}
+            href={social.url}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 hover:scale-110 border border-white/20 hover:border-white/40 hover:shadow-lg hover:shadow-white/10"
-            title={social.name}
+            title={social.description}
           >
             <IconComponent className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
 
@@ -303,7 +279,7 @@ function SocialLinks() {
 
 // 个人介绍组件
 function Introduction() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="bg-black/30 backdrop-blur-sm rounded-xl p-6 text-white border border-white/10">
@@ -334,15 +310,16 @@ function Introduction() {
 
       {/* 底部标签 */}
       <div className="flex flex-wrap gap-2 pt-3 border-t border-white/10">
-        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">
-          {t("introduction.tags.fullstack")}
-        </span>
-        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">
-          {t("introduction.tags.exploration")}
-        </span>
-        <span className="px-2 py-1 text-xs bg-white/10 rounded-full">
-          {t("introduction.tags.opensource")}
-        </span>
+        {translations[language].introduction.tags.map((tag: TagItem, index: number) => (
+          <span 
+            key={`tag-${index}-${tag.name}`}
+            className="tag-item px-2 py-1 text-xs rounded-full flex items-center gap-1 border text-white"
+            data-color={tag.color}
+          >
+            <span>{tag.icon}</span>
+            <span>{tag.name}</span>
+          </span>
+        ))}
       </div>
     </div>
   );
