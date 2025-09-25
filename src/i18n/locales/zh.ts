@@ -213,4 +213,15 @@ export const zh = {
   language: {
     switch: "切换语言",
   },
+  // 加载屏幕
+  loading: {
+    brandName: "UnclearPath",
+    welcome: "欢迎来到我的个人主页",
+    status: {
+      initializing: "初始化...",
+      loadingResources: "加载资源...",
+      preparingInterface: "准备界面...",
+      completed: "完成加载...",
+    },
+  },
 };

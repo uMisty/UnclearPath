@@ -28,8 +28,6 @@ body {
   overflow-x: hidden;
 }
 
-
-
 /* 标签样式 */
 .tag-item {
   position: relative;
@@ -43,27 +41,27 @@ body {
 
 .tag-item[data-color="#3B82F6"] {
   background-color: rgba(59, 130, 246, 0.2);
-  border-color: #3B82F6;
+  border-color: #3b82f6;
 }
 
 .tag-item[data-color="#10B981"] {
   background-color: rgba(16, 185, 129, 0.2);
-  border-color: #10B981;
+  border-color: #10b981;
 }
 
 .tag-item[data-color="#F59E0B"] {
   background-color: rgba(245, 158, 11, 0.2);
-  border-color: #F59E0B;
+  border-color: #f59e0b;
 }
 
 .tag-item[data-color="#8B5CF6"] {
   background-color: rgba(139, 92, 246, 0.2);
-  border-color: #8B5CF6;
+  border-color: #8b5cf6;
 }
 
 .tag-item[data-color="#EF4444"] {
   background-color: rgba(239, 68, 68, 0.2);
-  border-color: #EF4444;
+  border-color: #ef4444;
 }
 
 /* 动态背景装饰线条 - 曲线版本 */
@@ -839,4 +837,391 @@ body {
 .clock-spinner {
   border-color: rgba(255, 255, 255, 0.3);
   border-top-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 全局加载屏幕样式 */
+.loading-floating-dot {
+  animation: floating 3s ease-in-out infinite;
+}
+
+.loading-floating-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+.loading-floating-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loading-floating-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.loading-floating-dot:nth-child(4) {
+  animation-delay: 0.6s;
+}
+.loading-floating-dot:nth-child(5) {
+  animation-delay: 0.8s;
+}
+.loading-floating-dot:nth-child(6) {
+  animation-delay: 1s;
+}
+
+.loading-progress-shine {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shine 1.5s ease-in-out infinite;
+}
+
+.loading-bounce-dot {
+  animation: bounce 1.4s ease-in-out infinite;
+}
+
+.loading-bounce-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+.loading-bounce-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loading-bounce-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes floating {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-10px) translateX(5px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-20px) translateX(-5px);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translateY(-10px) translateX(5px);
+    opacity: 0.6;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+/* 加载进度条动态宽度类 */
+.loading-progress-bar {
+  transition: width 0.3s ease-out;
+}
+
+/* 进度条宽度类 */
+.progress-0 {
+  width: 0%;
+}
+.progress-1 {
+  width: 1%;
+}
+.progress-2 {
+  width: 2%;
+}
+.progress-3 {
+  width: 3%;
+}
+.progress-4 {
+  width: 4%;
+}
+.progress-5 {
+  width: 5%;
+}
+.progress-6 {
+  width: 6%;
+}
+.progress-7 {
+  width: 7%;
+}
+.progress-8 {
+  width: 8%;
+}
+.progress-9 {
+  width: 9%;
+}
+.progress-10 {
+  width: 10%;
+}
+.progress-11 {
+  width: 11%;
+}
+.progress-12 {
+  width: 12%;
+}
+.progress-13 {
+  width: 13%;
+}
+.progress-14 {
+  width: 14%;
+}
+.progress-15 {
+  width: 15%;
+}
+.progress-16 {
+  width: 16%;
+}
+.progress-17 {
+  width: 17%;
+}
+.progress-18 {
+  width: 18%;
+}
+.progress-19 {
+  width: 19%;
+}
+.progress-20 {
+  width: 20%;
+}
+.progress-21 {
+  width: 21%;
+}
+.progress-22 {
+  width: 22%;
+}
+.progress-23 {
+  width: 23%;
+}
+.progress-24 {
+  width: 24%;
+}
+.progress-25 {
+  width: 25%;
+}
+.progress-26 {
+  width: 26%;
+}
+.progress-27 {
+  width: 27%;
+}
+.progress-28 {
+  width: 28%;
+}
+.progress-29 {
+  width: 29%;
+}
+.progress-30 {
+  width: 30%;
+}
+.progress-31 {
+  width: 31%;
+}
+.progress-32 {
+  width: 32%;
+}
+.progress-33 {
+  width: 33%;
+}
+.progress-34 {
+  width: 34%;
+}
+.progress-35 {
+  width: 35%;
+}
+.progress-36 {
+  width: 36%;
+}
+.progress-37 {
+  width: 37%;
+}
+.progress-38 {
+  width: 38%;
+}
+.progress-39 {
+  width: 39%;
+}
+.progress-40 {
+  width: 40%;
+}
+.progress-41 {
+  width: 41%;
+}
+.progress-42 {
+  width: 42%;
+}
+.progress-43 {
+  width: 43%;
+}
+.progress-44 {
+  width: 44%;
+}
+.progress-45 {
+  width: 45%;
+}
+.progress-46 {
+  width: 46%;
+}
+.progress-47 {
+  width: 47%;
+}
+.progress-48 {
+  width: 48%;
+}
+.progress-49 {
+  width: 49%;
+}
+.progress-50 {
+  width: 50%;
+}
+.progress-51 {
+  width: 51%;
+}
+.progress-52 {
+  width: 52%;
+}
+.progress-53 {
+  width: 53%;
+}
+.progress-54 {
+  width: 54%;
+}
+.progress-55 {
+  width: 55%;
+}
+.progress-56 {
+  width: 56%;
+}
+.progress-57 {
+  width: 57%;
+}
+.progress-58 {
+  width: 58%;
+}
+.progress-59 {
+  width: 59%;
+}
+.progress-60 {
+  width: 60%;
+}
+.progress-61 {
+  width: 61%;
+}
+.progress-62 {
+  width: 62%;
+}
+.progress-63 {
+  width: 63%;
+}
+.progress-64 {
+  width: 64%;
+}
+.progress-65 {
+  width: 65%;
+}
+.progress-66 {
+  width: 66%;
+}
+.progress-67 {
+  width: 67%;
+}
+.progress-68 {
+  width: 68%;
+}
+.progress-69 {
+  width: 69%;
+}
+.progress-70 {
+  width: 70%;
+}
+.progress-71 {
+  width: 71%;
+}
+.progress-72 {
+  width: 72%;
+}
+.progress-73 {
+  width: 73%;
+}
+.progress-74 {
+  width: 74%;
+}
+.progress-75 {
+  width: 75%;
+}
+.progress-76 {
+  width: 76%;
+}
+.progress-77 {
+  width: 77%;
+}
+.progress-78 {
+  width: 78%;
+}
+.progress-79 {
+  width: 79%;
+}
+.progress-80 {
+  width: 80%;
+}
+.progress-81 {
+  width: 81%;
+}
+.progress-82 {
+  width: 82%;
+}
+.progress-83 {
+  width: 83%;
+}
+.progress-84 {
+  width: 84%;
+}
+.progress-85 {
+  width: 85%;
+}
+.progress-86 {
+  width: 86%;
+}
+.progress-87 {
+  width: 87%;
+}
+.progress-88 {
+  width: 88%;
+}
+.progress-89 {
+  width: 89%;
+}
+.progress-90 {
+  width: 90%;
+}
+.progress-91 {
+  width: 91%;
+}
+.progress-92 {
+  width: 92%;
+}
+.progress-93 {
+  width: 93%;
+}
+.progress-94 {
+  width: 94%;
+}
+.progress-95 {
+  width: 95%;
+}
+.progress-96 {
+  width: 96%;
+}
+.progress-97 {
+  width: 97%;
+}
+.progress-98 {
+  width: 98%;
+}
+.progress-99 {
+  width: 99%;
+}
+.progress-100 {
+  width: 100%;
 }

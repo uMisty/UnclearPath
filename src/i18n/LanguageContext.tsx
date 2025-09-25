@@ -7,7 +7,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import { type Language, translations } from "./translations";
+import {
+  ensureLanguageLoaded,
+  type Language,
+  translations,
+} from "./translations";
 
 interface LanguageContextType {
   language: Language;
@@ -16,6 +20,7 @@ interface LanguageContextType {
   formatWeather: (weather: WeatherData) => string;
   formatDate: (date: Date) => string;
   getPageTitle: () => string;
+  isLoading: boolean;
 }
 
 interface WeatherData {
@@ -30,39 +35,33 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined,
 );
 
-// 获取用户首选语言
+// 简化的语言检测函数
 function getUserPreferredLanguage(): Language {
   if (typeof window === "undefined") return "zh";
 
   // 从localStorage获取保存的语言设置
   const savedLanguage = localStorage.getItem("preferred-language") as Language;
-  if (savedLanguage && savedLanguage in translations) {
+  if (savedLanguage && ["zh", "zh-TW", "en"].includes(savedLanguage)) {
     return savedLanguage;
   }
 
-  // 从浏览器语言获取
-  const browserLang = navigator.language || navigator.languages?.[0] || "zh";
+  // 从浏览器语言获取（简化逻辑）
+  const browserLang = navigator.language || "zh";
 
-  // 匹配支持的语言
   if (browserLang.startsWith("zh")) {
-    // 区分简体和繁体中文
-    if (
-      browserLang.includes("TW") ||
+    return browserLang.includes("TW") ||
       browserLang.includes("HK") ||
       browserLang.includes("MO")
-    ) {
-      return "zh-TW";
-    }
-    return "zh";
+      ? "zh-TW"
+      : "zh";
   }
   if (browserLang.startsWith("en")) return "en";
 
-  // 默认简体中文
   return "zh";
 }
 
 // 嵌套对象访问函数
-function getNestedValue(obj: Record<string, unknown>, path: string): string {
+function getNestedValue(obj: unknown, path: string): string {
   return (
     (path.split(".").reduce((current: unknown, key: string) => {
       if (current && typeof current === "object" && key in current) {
@@ -75,29 +74,43 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>("zh");
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // 客户端初始化语言
+    // 初始化用户首选语言
     const preferredLang = getUserPreferredLanguage();
-    setLanguageState(preferredLang);
-    setIsInitialized(true);
+    if (preferredLang !== "zh") {
+      setIsLoading(true);
+      ensureLanguageLoaded(preferredLang).finally(() => {
+        setLanguageState(preferredLang);
+        setIsLoading(false);
+      });
+    } else {
+      setLanguageState(preferredLang);
+    }
   }, []);
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
+  const setLanguage = async (lang: Language) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("preferred-language", lang);
     }
+
+    if (lang !== "zh") {
+      setIsLoading(true);
+      await ensureLanguageLoaded(lang);
+      setIsLoading(false);
+    }
+
+    setLanguageState(lang);
   };
 
   const t = (key: string): string => {
-    if (!isInitialized) return key; // 初始化前返回key避免闪烁
+    if (!translations[language]) return key;
     return getNestedValue(translations[language], key);
   };
 
   const formatDate = (date: Date): string => {
-    if (!isInitialized) return "";
+    if (!translations[language]) return "";
 
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -132,7 +145,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const formatWeather = (weather: WeatherData): string => {
-    if (!isInitialized) return "";
+    if (!translations[language]) return "";
     const template = getNestedValue(translations[language], "weather.format");
     return template
       .replace("{location}", weather.location)
@@ -143,7 +156,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const getPageTitle = (): string => {
-    if (!isInitialized) return "UnclearPath";
+    if (!translations[language]) return "UnclearPath";
     const pageTitle = getNestedValue(translations[language], "site.title");
     const siteName = getNestedValue(translations[language], "site.name");
     return `${pageTitle} - ${siteName}`;
@@ -158,6 +171,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         formatWeather,
         formatDate,
         getPageTitle,
+        isLoading,
       }}
     >
       {children}

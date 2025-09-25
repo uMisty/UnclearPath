@@ -213,4 +213,15 @@ export const zhTW = {
   language: {
     switch: "切換語言",
   },
+  // 載入畫面
+  loading: {
+    brandName: "UnclearPath",
+    welcome: "歡迎來到我的個人主頁",
+    status: {
+      initializing: "初始化...",
+      loadingResources: "載入資源...",
+      preparingInterface: "準備介面...",
+      completed: "完成載入...",
+    },
+  },
 };

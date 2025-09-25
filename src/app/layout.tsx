@@ -1,5 +1,9 @@
-import type { Metadata } from "next";
+"use client";
+
 import { Geist, Geist_Mono } from "next/font/google";
+import { useState } from "react";
+import { LoadingScreen } from "../components";
+import { LanguageProvider } from "../i18n/LanguageContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,30 +16,38 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// 动态生成元数据
-export async function generateMetadata(): Promise<Metadata> {
-  // 简化版本，使用默认中文配置
-  // 在实际应用中可以根据用户语言偏好动态选择
-  const defaultTitle = "个人主页 - uMisty";
-  const defaultDescription = "一个优雅的个人主页，展示你的数字名片";
-
-  return {
-    title: defaultTitle,
-    description: defaultDescription,
-  };
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoadComplete = () => {
+    setIsLoading(false);
+  };
+
   return (
-    <html lang="en">
+    <html lang="zh">
+      <head>
+        <title>个人主页 - uMisty</title>
+        <meta
+          name="description"
+          content="一个优雅的个人主页，展示你的数字名片"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <LanguageProvider>
+          {isLoading && <LoadingScreen onLoadComplete={handleLoadComplete} />}
+          <div
+            className={`transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"}`}
+          >
+            {children}
+          </div>
+        </LanguageProvider>
       </body>
     </html>
   );

@@ -1,0 +1,1 @@
+export { Motto } from "./Motto";

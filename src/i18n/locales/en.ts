@@ -214,4 +214,15 @@ export const en = {
   language: {
     switch: "Switch Language",
   },
+  // Loading screen
+  loading: {
+    brandName: "UnclearPath",
+    welcome: "Welcome to my personal homepage",
+    status: {
+      initializing: "Initializing...",
+      loadingResources: "Loading resources...",
+      preparingInterface: "Preparing interface...",
+      completed: "Loading completed...",
+    },
+  },
 };
